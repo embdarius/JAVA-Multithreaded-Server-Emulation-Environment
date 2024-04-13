@@ -34,6 +34,10 @@ public class SimulationFrame extends JFrame {
     private ArrayList<JTextArea> serversTextAreaList;
     private JPanel waitingTasksPanel;
     private JTextArea waitingTasksTextArea = null;
+    private JLabel peakHourLabel;
+    private JLabel averageServiceTimeLabel;
+    private JLabel averageWaitingTimeLabel;
+
 
     private SimulationManager simulationManager;
     private JLabel timeLabel;
@@ -48,10 +52,10 @@ public class SimulationFrame extends JFrame {
         optionPanel = new JPanel(new GridLayout(10,2));
         startButton = new JButton("Start simulation");
 
-        maxServersComboBox = new JComboBox<>(new Integer[]{1,2,3,4,5,6,7,8});
+        maxServersComboBox = new JComboBox<>(new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20});
         maxTasksPerServerComboBox = new JComboBox<>(new Integer[]{1,2,3,4,5,6,7,8});
         minArrivalTimeComboBox = new JComboBox<>(new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20});
-        maxArrivalTimeComboBox = new JComboBox<>(new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30});
+        maxArrivalTimeComboBox = new JComboBox<>(new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40, 100});
         minServiceTimeComboBox = new JComboBox<>(new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15});
         maxServiceTimeComboBox = new JComboBox<>(new Integer[]{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30});
         queueStrategyComboBox = new JComboBox<>(new String[]{"Time strategy", "Shortest Queue strategy"});
@@ -106,7 +110,7 @@ public class SimulationFrame extends JFrame {
         serversTextAreaList = new ArrayList<>();
 
         extensionPanel = new JPanel(new GridBagLayout());
-        waitingTasksPanel = new JPanel(new GridLayout(3,1));
+        waitingTasksPanel = new JPanel(new GridLayout(6,1));
         for (int i = 0; i < activeServers; i++) {
             JLabel label = new JLabel("Server " + (i + 1));
             JTextArea serverTasks = new JTextArea(4,3);
@@ -126,6 +130,13 @@ public class SimulationFrame extends JFrame {
 
         waitingTasksPanel.add(new JLabel("Waiting tasks"));
         waitingTasksPanel.add(waitingTasksTextArea);
+
+        peakHourLabel = new JLabel("Peak hour: unknown");
+        averageServiceTimeLabel = new JLabel("Average service time: 0");
+        averageWaitingTimeLabel = new JLabel("Average waiting time: 0");
+        waitingTasksPanel.add(peakHourLabel);
+        waitingTasksPanel.add(averageWaitingTimeLabel);
+        waitingTasksPanel.add(averageServiceTimeLabel);
 
         remove(mainPanel);
         add(extensionPanel, BorderLayout.CENTER);
@@ -149,6 +160,19 @@ public class SimulationFrame extends JFrame {
         }
     }
 
+    public void updateAverageTimes(){
+        averageWaitingTimeLabel.setText("Average waiting time: " + simulationManager.getAverageWaitingTime());
+        averageServiceTimeLabel.setText("Average service time: " + simulationManager.getAverageServiceTime());
+    }
+
+    public void updateFinalAverageWaitingTime(double time){
+        averageWaitingTimeLabel.setText("Average waiting time: " + time);
+    }
+
+    public void updatePeakHourTimes(){
+        peakHourLabel.setText("Peak hour: " + simulationManager.getPeakHour());
+    }
+
     public ArrayList<JTextArea> getServersTextAreaList(){
         return this.serversTextAreaList;
     }
@@ -157,9 +181,6 @@ public class SimulationFrame extends JFrame {
         this.timeLabel.setText("TIME: " + time);
     }
 
-    public void setSimulationManager(SimulationManager simulationManager){
-        this.simulationManager = simulationManager;
-    }
 
     public JComboBox<Integer> getMaxServersComboBox() {
         return maxServersComboBox;
@@ -189,7 +210,7 @@ public class SimulationFrame extends JFrame {
         return queueStrategyComboBox;
     }
 
-    public void setSimulationManagerSettings(){
+    private void setSimulationManagerSettings(){
         simulationManager.setMaxServers(maxServersComboBox.getSelectedIndex() + 1);
         simulationManager.setMaxTasks(maxTasksPerServerComboBox.getSelectedIndex() + 1);
         simulationManager.setMinArrivalTime(minArrivalTimeComboBox.getSelectedIndex() + 1);
